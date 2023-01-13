@@ -1,0 +1,12 @@
+/* your css code */
+
+.TabsSelector {
+  width: 938px;
+  /* display: flex;
+  flex-direction: column;
+  column-gap: 20px; */
+}
+
+.wrapperForInput {
+  padding-bottom: 15px;
+}

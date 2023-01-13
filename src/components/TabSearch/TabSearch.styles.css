@@ -1,0 +1,7 @@
+/* your css code */
+
+.wrapperForTabSearch {
+  display: flex;
+  flex-direction: column;
+  column-gap: 10px;
+}
