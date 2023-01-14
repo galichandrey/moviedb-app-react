@@ -2,6 +2,7 @@ import React from "react";
 import { Layout, Space, Typography, Rate } from "antd";
 import { parseISO, format } from "date-fns";
 
+import Spinner from "../Spinner";
 import PosterImage from "../PosterImage";
 import Description from "../Description";
 
@@ -16,7 +17,14 @@ export default class Card extends React.Component {
     super(props);
     this.state = {
       hasError: false,
+      loading: true,
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      loading: false,
+    });
   }
 
   dateConvert(release_date) {
@@ -25,15 +33,14 @@ export default class Card extends React.Component {
 
   render() {
     const { id, original_title, release_date, overview, poster_path } = this.props;
+    const { loading } = this.state;
     if (this.state.hasError) {
       return <h1>Something went wrong.</h1>;
     }
     return (
       <>
         <Layout className="card">
-          <Sider width={183}>
-            <PosterImage poster_path={poster_path} />
-          </Sider>
+          <Sider width={183}>{loading ? <Spinner /> : <PosterImage poster_path={poster_path} />}</Sider>
           <Layout>
             <Header>
               {/* <Space

@@ -3,6 +3,7 @@
 }
 
 .wrapper {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,4 +15,23 @@
   grid-template-columns: 451px 451px;
   column-gap: 30px;
   row-gap: 30px;
+}
+
+@media screen and (max-width: 1028px) {
+  
+  .wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .main {
+    width: 451px;
+    display: grid;
+    grid-template-columns: 451px;
+    column-gap: 30px;
+    row-gap: 30px;
+  }
+
 }

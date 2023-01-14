@@ -1,5 +1,5 @@
 import React from "react";
-import { Spin } from "antd";
+import { Space, Spin } from "antd";
 // import PropTypes from "prop-types";
 //import { Test } from "./Main.styles";
 
@@ -42,7 +42,16 @@ export default class Main extends React.Component {
   render() {
     const { moviesList } = this.state;
     if (!moviesList) {
-      return <Spin />;
+      return (
+        <Space
+          direction="vertical"
+          style={{ display: "flex", juctifyContent: "center", alignItems: "center", width: "100%" }}
+        >
+          <Space direction="horizontal">
+            <Spin tip="Loading" />
+          </Space>
+        </Space>
+      );
     }
     const cards = this.renderCards(moviesList);
 
