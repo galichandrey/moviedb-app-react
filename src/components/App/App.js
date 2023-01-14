@@ -8,16 +8,25 @@ import TabsSelector from "../TabsSelector";
 import "./App.styles.css";
 // import Card from "../Card";
 
-const Grid = () => {
-  return (
-    <div className="wrapper">
-      <div className="app">
-        <div className="header">
-          <TabsSelector />
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      hasError: false,
+      // query: "return",
+    };
+  }
+  render() {
+    return (
+      <div className="wrapper">
+        <div className="app">
+          <div className="header">
+            <TabsSelector />
+          </div>
+          <div className="foot">{/* <Api query={query} /> */}</div>
         </div>
       </div>
-    </div>
-  );
-};
-
-export default Grid;
+    );
+  }
+}

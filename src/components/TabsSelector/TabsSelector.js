@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs } from "antd";
+import { Tabs, Spin } from "antd";
 
 // import Main from "../Main";
 import TabSearch from "../TabSearch";
@@ -23,14 +23,34 @@ const items = [
   },
 ];
 
-const TabsSelector = () => (
-  <Tabs
-    centered
-    defaultActiveKey="1"
-    items={items}
-    onChange={onChange}
-    className="TabsSelector"
-  />
-);
+export default class TabsSelector extends React.Component {
+  constructor(props) {
+    super(props);
 
-export default TabsSelector;
+    this.state = {
+      hasError: false,
+      loading: true,
+    };
+  }
+
+  render() {
+    const { loading } = this.state;
+
+    if (!loading) {
+      console.log(loading);
+      return <Spin />;
+    }
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+    return (
+      <Tabs
+        centered
+        defaultActiveKey="1"
+        items={items}
+        onChange={onChange}
+        className="TabsSelector"
+      />
+    );
+  }
+}
