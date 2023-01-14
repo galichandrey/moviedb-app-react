@@ -1,5 +1,6 @@
 import React from "react";
 import { Layout, Space, Typography, Rate } from "antd";
+import { parseISO, format } from "date-fns";
 
 import PosterImage from "../PosterImage";
 import Description from "../Description";
@@ -16,6 +17,10 @@ export default class Card extends React.Component {
     this.state = {
       hasError: false,
     };
+  }
+
+  dateConvert(release_date) {
+    return format(parseISO(release_date), "MMMM dd, yyyy");
   }
 
   render() {
@@ -38,7 +43,7 @@ export default class Card extends React.Component {
               <Title level={2}>
                 {id} {original_title}
               </Title>
-              <Text type="secondary">{release_date}</Text>
+              <Text type="secondary">{this.dateConvert(release_date)}</Text>
               <Space
                 direction="horizontal"
                 className="fdf"

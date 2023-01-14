@@ -3,7 +3,7 @@ import React, { Component } from "react";
 //import { Test } from "./TabSearch.styles";
 // import { Input } from "antd";
 
-import Main from "../Main";
+import CardList from "../CardList";
 
 class TabSearch extends Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class TabSearch extends Component {
       <>
         <div className="wrapperForTabRated">
           <div className="wrapperForMain">
-            <Main />
+            <CardList />
           </div>
         </div>
       </>

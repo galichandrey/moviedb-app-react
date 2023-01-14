@@ -3,7 +3,7 @@ import React, { Component } from "react";
 //import { Test } from "./TabSearch.styles";
 import { Input } from "antd";
 
-import Main from "../Main";
+import CardList from "../CardList";
 import Footer from "../Footer";
 
 class TabSearch extends Component {
@@ -26,7 +26,7 @@ class TabSearch extends Component {
             <Input placeholder="Basic usage" />
           </div>
           <div className="wrapperForMain">
-            <Main />
+            <CardList />
           </div>
           <div className="wrapperForFooter">
             <Footer />
