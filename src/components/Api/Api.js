@@ -9,7 +9,7 @@ export default class Api extends React.Component {
     this.state = {
       hasError: false,
     };
-    this._apiBase = "https://api.themoviedb.org/3/search/movie/";
+    this._apiBase = "https://api.themoviedb.org/3/search/movie";
     this._apiKey = "dc4df0b8fca07bf8f1f87fb1e7fdd71c";
     this.getMovies = this.getMovies.bind(this);
     this.getResource = this.getResource.bind(this);
