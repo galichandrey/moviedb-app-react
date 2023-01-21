@@ -10,6 +10,14 @@
   
 }
 
+.card-preloader {
+  width: 185px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .card .ant-layout-header {
   display: flex;
   flex-direction: column;
@@ -50,4 +58,8 @@ h2.ant-typography {
 .card .ant-layout-footer {
   margin: 0px;
   padding: 0 16px 15px 16px;
+}
+
+.ant-layout .ant-layout-sider {
+  background-color: rgb(255, 255, 255);
 }

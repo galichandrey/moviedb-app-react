@@ -1,9 +1,9 @@
-import React, { PureComponent } from "react";
+import React from "react";
 // import PropTypes from "prop-types";
 //import { Test } from "./Spinner.styles";
 import { Space, Spin } from "antd";
 
-class Spinner extends PureComponent {
+class Spinner extends React.Component {
   constructor(props) {
     super(props);
 

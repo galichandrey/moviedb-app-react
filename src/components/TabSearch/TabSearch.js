@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 // import PropTypes from "prop-types";
-//import { Test } from "./TabSearch.styles";
-import { Input } from "antd";
+// import { Spin } from "antd";
+import "./TabSearch.styles.css";
 
+import AlertAlarm from "../AlertAlarm";
 import CardList from "../CardList";
-import Footer from "../Footer";
 
 class TabSearch extends Component {
   constructor(props) {
@@ -12,24 +12,58 @@ class TabSearch extends Component {
 
     this.state = {
       hasError: false,
+      loading: true,
     };
   }
 
+  componentDidMount() {
+    this.setState(() => {
+      return { loading: false };
+    });
+    console.log("TabSearch - componentDidMount");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { moviesList } = this.props;
+    if (!moviesList) {
+      return <div>No movies found. Please, try another movie</div>;
+    }
+
+    if (prevProps.query !== this.props.query) {
+      console.log("TabSearch QUERY props are changed!");
+    }
+    if (prevState.query !== this.state.query) {
+      console.log("State", this.state.query);
+    }
+  }
+
   render() {
-    if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
+    const { errorMessage } = this.props;
+    const { moviesList, query, page, updatePage } = this.props;
+    const { loading } = this.props;
+
+    // console.log(loading);
+    // if (loading) {
+    //   return <Spin />;
+    // }
+
+    // const spinner = loading ? <Spin /> : null;
+
+    if (this.props.errorMessage) {
+      return <AlertAlarm errorMessage={errorMessage} />;
     }
     return (
       <>
         <div className="wrapperForTabSearch">
-          <div className="wrapperForInput">
-            <Input placeholder="Basic usage" />
-          </div>
           <div className="wrapperForMain">
-            <CardList />
-          </div>
-          <div className="wrapperForFooter">
-            <Footer />
+            {/* {spinner} */}
+            <CardList
+              moviesList={moviesList}
+              query={query}
+              page={page}
+              updatePage={updatePage}
+              loading={loading}
+            />
           </div>
         </div>
       </>

@@ -1,11 +1,11 @@
-import React, { PureComponent } from "react";
+import React from "react";
 // import PropTypes from "prop-types";
 //import { Test } from "./Footer.styles";
 import { Pagination } from "antd";
 
 import "../Footer/Footer.styles.css";
 
-class Footer extends PureComponent {
+export default class Footer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -14,7 +14,13 @@ class Footer extends PureComponent {
     };
   }
 
+  handlePaginationOnChange = (paginationPageNumber) => {
+    const { updatePage, query } = this.props;
+    updatePage(query, paginationPageNumber);
+  };
+
   render() {
+    const { page, total_results } = this.props;
     if (this.state.hasError) {
       return <h1>Something went wrong.</h1>;
     }
@@ -22,7 +28,11 @@ class Footer extends PureComponent {
       <div className="FooterWrapper">
         <Pagination
           defaultCurrent={1}
-          total={50}
+          total={total_results ? total_results : null}
+          current={page}
+          pageSize={20}
+          onChange={this.handlePaginationOnChange}
+          hideOnSinglePage="true"
         />
       </div>
     );
@@ -36,5 +46,3 @@ Footer.propTypes = {
 Footer.defaultProps = {
   // bla: 'test',
 };
-
-export default Footer;

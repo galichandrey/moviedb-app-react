@@ -1,1 +1,18 @@
 /* your css code */
+
+.CardList {
+  width: 100%;
+  min-width: 938px;
+  display: flex;
+  flex-direction: column;
+  column-gap: 10px;
+  padding-top: 15px;
+}
+
+@media screen and (max-width: 1028px) {
+
+  .CardList {
+  min-width: 451px;
+  }
+
+}

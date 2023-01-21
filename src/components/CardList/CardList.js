@@ -1,31 +1,36 @@
 import React from "react";
-import { Space, Spin } from "antd";
 // import PropTypes from "prop-types";
 //import { Test } from "./Main.styles";
+import "./CardList.styles.css";
 
-import Api from "../Api";
 import Card from "../Card";
+import AlertAlarm from "../AlertAlarm";
 
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasError: false,
-      moviesList: null,
+      // hasError: false,
+      errorMessage: null,
+      loading: true,
     };
-    this.renderCards = this.renderCards.bind(this);
   }
 
   componentDidMount() {
-    const api = new Api();
-    return api.getMovies("return").then((moviesList) => {
-      this.setState({
-        moviesList,
-      });
-    });
+    const { query, page, updatePage } = this.props;
+    updatePage(query, page);
   }
 
-  renderCards(movieArray) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.page !== this.props.page) {
+      // console.log("CardList - updated", this.props.query);
+    }
+    if (prevState.page !== this.state.page) {
+      // console.log("State (loading)", this.state.loading);
+    }
+  }
+
+  renderCards = (movieArray) => {
     return movieArray.map(({ id, original_title, release_date, overview, poster_path }) => {
       return (
         <Card
@@ -37,27 +42,21 @@ export default class Main extends React.Component {
         />
       );
     });
-  }
+  };
 
   render() {
-    const { moviesList } = this.state;
-    if (!moviesList) {
-      return (
-        <Space
-          direction="vertical"
-          style={{ display: "flex", juctifyContent: "center", alignItems: "center", width: "100%" }}
-        >
-          <Space direction="horizontal">
-            <Spin tip="Loading" />
-          </Space>
-        </Space>
-      );
-    }
-    const cards = this.renderCards(moviesList);
+    const { errorMessage } = this.state;
+    const { query, moviesList } = this.props;
 
-    if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
+    if (errorMessage) {
+      return <AlertAlarm errorMessage={errorMessage} />;
     }
+
+    const cards = this.renderCards(moviesList);
+    if ((moviesList.length === 0) & (query.length > 0)) {
+      return <div>No movies found. Please, try another movie</div>;
+    }
+
     return <div className="main">{cards}</div>;
   }
 }

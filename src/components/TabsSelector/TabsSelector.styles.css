@@ -7,15 +7,10 @@
   column-gap: 20px; */
 }
 
-.wrapperForInput {
-  padding-bottom: 15px;
-}
-
 @media screen and (max-width: 1028px) {
 
   .TabsSelector {
     width: 451px;
   }
-
 
 }

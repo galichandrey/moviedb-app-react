@@ -5,43 +5,58 @@ import { Tabs, Spin } from "antd";
 import TabSearch from "../TabSearch";
 import TabRated from "../TabRated";
 import "./TabsSelector.styles.css";
+import AlertAlarm from "../AlertAlarm";
 
 const onChange = (key) => {
   console.log(key);
 };
 
-const items = [
-  {
-    key: "1",
-    label: "Search",
-    children: <TabSearch />,
-  },
-  {
-    key: "2",
-    label: "Rated",
-    children: <TabRated />,
-  },
-];
-
 export default class TabsSelector extends React.Component {
   constructor(props) {
     super(props);
-
+    const query = this.props.query;
+    const page = this.props.page;
+    const moviesList = this.props.moviesList;
     this.state = {
       hasError: false,
       loading: true,
+      moviesList,
+      items: [
+        {
+          key: "1",
+          label: "Search",
+          children: (
+            <TabSearch
+              moviesList={moviesList}
+              query={query}
+              page={page}
+            />
+          ),
+        },
+        {
+          key: "2",
+          label: "Rated",
+          children: <TabRated />,
+        },
+      ],
     };
   }
 
+  componentDidMount() {
+    this.setState({ moviesList: this.props.moviesList });
+    console.log(this.state);
+  }
+
   render() {
-    const { loading } = this.state;
+    const { loading, items } = this.state;
 
     if (!loading) {
       console.log(loading);
       return <Spin />;
     }
-    if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
+    if (this.props.errorMessage) {
+      const { errorMessage } = this.props.errorMessage;
+      return <AlertAlarm errorMessage={errorMessage} />;
     }
     return (
       <Tabs

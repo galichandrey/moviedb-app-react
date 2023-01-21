@@ -10,11 +10,17 @@
 }
 
 .main {
-  width: 1010px;
+  width: 940px;
+  /* width: 1010px; */
   display: grid;
   grid-template-columns: 451px 451px;
   column-gap: 30px;
   row-gap: 30px;
+}
+
+.wrapperForInput {
+  width: 937px;
+  padding-bottom: 15px;
 }
 
 @media screen and (max-width: 1028px) {
@@ -32,6 +38,11 @@
     grid-template-columns: 451px;
     column-gap: 30px;
     row-gap: 30px;
+  }
+
+  .wrapperForInput {
+    width: 453px;
+    padding-bottom: 15px;
   }
 
 }
