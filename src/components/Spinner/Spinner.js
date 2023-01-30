@@ -1,6 +1,4 @@
 import React from "react";
-// import PropTypes from "prop-types";
-//import { Test } from "./Spinner.styles";
 import { Space, Spin } from "antd";
 
 class Spinner extends React.Component {
@@ -29,12 +27,8 @@ class Spinner extends React.Component {
   }
 }
 
-Spinner.propTypes = {
-  // bla: PropTypes.string,
-};
+Spinner.propTypes = {};
 
-Spinner.defaultProps = {
-  // bla: 'test',
-};
+Spinner.defaultProps = {};
 
 export default Spinner;

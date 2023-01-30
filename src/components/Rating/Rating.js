@@ -1,0 +1,52 @@
+import React from "react";
+import { Rate } from "antd";
+
+// import { RatingContext } from "./RatingContext.js";
+
+class Rating extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      hasError: false,
+      rating: this.props.rating,
+      rating_state: 0,
+    };
+  }
+
+  // static contextType = RatingContext;
+
+  onRatingChange = (e) => {
+    const { id, rateMovie } = this.props;
+    rateMovie(id, e);
+    this.setState(() => {
+      return {
+        rating_state: e,
+      };
+    });
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+    const { rating } = this.props;
+    const { rating_state } = this.state;
+
+    return (
+      <Rate
+        allowHalf
+        count={10}
+        onChange={this.onRatingChange}
+        value={rating_state ? rating_state : rating}
+        allowClear={false}
+      />
+    );
+  }
+}
+
+Rating.propTypes = {};
+
+Rating.defaultProps = {};
+
+export default Rating;

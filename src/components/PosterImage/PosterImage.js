@@ -8,12 +8,6 @@ export default class PosterImage extends React.Component {
     const filesize = "w500";
     const no_image = "/no_image.png";
 
-    return (
-      <Image
-        width={183}
-        // height={281}
-        src={poster_path ? `${url}${filesize}${poster_path}` : no_image}
-      />
-    );
+    return <Image src={poster_path ? `${url}${filesize}${poster_path}` : no_image} />;
   }
 }

@@ -1,13 +1,55 @@
+.card { 
+  display: grid;
+  grid-template-columns: 185px 138px 128px;
+  grid-template-rows: 108px 134px 35px;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "cardImage cardTitle cardTitle"
+    "cardImage cardDescription cardDescription"
+    "cardImage cardRating cardRating";
+    
+  box-shadow: 5px 5px 15px 0 #D9D9D9; 
+}
+
+.cardImage { grid-area: cardImage; }
+
+.cardTitleContainer {
+  grid-area: cardTitle;
+  padding: 12px 15px 0px 15px;
+}
+
+.cardDescription {
+  grid-area: cardDescription;
+  padding: 15px;
+}
+
+.cardRating {
+  grid-area: cardRating;
+  display: flex;
+  justify-content: center;
+  padding: 0px 5px 10px 5px;
+}
+
+
+/* 
 .card {
   max-width: 454px;
   width: 454px;
   height: 275px;
-  /* background-color: #fff; */
-  /* border: 1px solid #E5E5E5; */
   margin: 0px;
   padding: 0px;
   box-shadow: 5px 5px 15px 0 #D9D9D9; 
   
+} */
+
+.cardTitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  gap: 5px;
+  font-size: 20px;
 }
 
 .card-preloader {
@@ -21,8 +63,8 @@
 .card .ant-layout-header {
   display: flex;
   flex-direction: column;
-  height: 101px;
-  padding: 15px;
+  min-height: 76px;
+  padding: 12px 15px 0px 15px;
   margin: 0px;
   background-color: #fff0;
   text-align: left;
@@ -55,11 +97,87 @@ h2.ant-typography {
   font-size: 12px;
 }
 
-.card .ant-layout-footer {
+/* .card .ant-layout-footer {
   margin: 0px;
   padding: 0 16px 15px 16px;
-}
+} */
 
 .ant-layout .ant-layout-sider {
   background-color: rgb(255, 255, 255);
+}
+
+/* .ant-space-horizontal {
+  height: 50px;
+} */
+
+/* .ant-space-vertical {
+  line-height: 50px;
+  height: 50px;
+} */
+
+/* .ant-space {
+  row-gap: 16px
+} */
+
+
+
+@media screen and (max-width: 1028px) {
+  
+  aside .ant-layout-sider ant-layout-sider-dark, .ant-image {
+    width: 60px;
+    height: 91px;
+  }
+
+  .card {  display: grid;
+    grid-template-columns: 71px 185px 132px;
+    grid-template-rows: 103px 107px 34px;
+    grid-auto-rows: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "cardImage cardTitle cardTitle"
+      "cardDescription cardDescription cardDescription"
+      "cardRating cardRating cardRating";
+  }
+
+  .cardImage { grid-area: cardImage;
+  padding: 10px;
+  }
+  
+  .cardTitleContainer {
+    grid-area: cardTitle;
+    padding: 12px 15px 0px 15px;
+  }
+  
+  .cardDescription {
+    grid-area: cardDescription;
+    padding: 10px;
+  }
+  
+  .cardRating {
+    grid-area: cardRating;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 15px 0 15px;
+  }
+  
+  .card {
+    max-width: 454px;
+    width: 387px;
+    height: 245px;    
+    margin: 0px;
+    padding: 0px;
+    box-shadow: 5px 5px 15px 0 #D9D9D9; 
+    }
+
+    .card-preloader {
+      width: 60px;
+      height: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid rgba(7, 1, 110, 0.303);
+      padding-bottom: 25px;
+    }
+
 }

@@ -1,6 +1,4 @@
 import React from "react";
-// import PropTypes from "prop-types";
-//import { Test } from "./Footer.styles";
 import { Pagination } from "antd";
 
 import "../Footer/Footer.styles.css";
@@ -32,17 +30,14 @@ export default class Footer extends React.Component {
           current={page}
           pageSize={20}
           onChange={this.handlePaginationOnChange}
-          hideOnSinglePage="true"
+          showSizeChanger={false}
+          hideOnSinglePage={true}
         />
       </div>
     );
   }
 }
 
-Footer.propTypes = {
-  // bla: PropTypes.string,
-};
+Footer.propTypes = {};
 
-Footer.defaultProps = {
-  // bla: 'test',
-};
+Footer.defaultProps = {};

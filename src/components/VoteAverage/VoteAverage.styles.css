@@ -1,0 +1,17 @@
+/* your css code */
+
+.VoteAverage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 12px;
+  padding: 15px;
+  border-radius: 50%;
+  min-width: 10px;
+  min-height: 10px;
+  max-width: 35px;
+  max-height: 35px;
+  right: 5px;
+  top: 5px;
+}

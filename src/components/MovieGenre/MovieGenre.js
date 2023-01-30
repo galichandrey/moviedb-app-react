@@ -1,13 +1,42 @@
 import React from "react";
-import { Space, Typography } from "antd";
+import { Typography } from "antd";
 
 const { Text } = Typography;
 
-const MovieGenre = () => (
-  <Space direction="horizontal">
-    <Text keyboard>Action</Text>
-    <Text keyboard>Drama</Text>
-  </Space>
-);
+import "./MovieGenre.styles.css";
+
+import { MovieGenreContext } from "./MovieGenreContext";
+
+class MovieGenre extends React.Component {
+  constructor() {
+    super();
+  }
+
+  static contextType = MovieGenreContext;
+
+  render() {
+    const { genre_ids } = this.props;
+
+    const { genres } = this.context;
+
+    const genreNames = genres.map((element) => {
+      for (let i = 0; i < genre_ids.length; i++) {
+        if (element.id === genre_ids[i]) {
+          return (
+            <Text
+              code
+              key={element.name}
+              className="MovieGenre"
+            >
+              {element.name}
+            </Text>
+          );
+        }
+      }
+    });
+
+    return <div className="MovieGenresContainer">{genreNames}</div>;
+  }
+}
 
 export default MovieGenre;

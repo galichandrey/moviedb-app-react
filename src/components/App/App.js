@@ -1,30 +1,108 @@
 import React from "react";
 import { debounce } from "lodash";
-import { Space, Spin } from "antd";
+import { Tabs, Space, Spin } from "antd";
 
-import SearchArea from "../SearchArea";
-import CardList from "../CardList";
-import Footer from "../Footer";
 import "./App.styles.css";
+import Api from "../Api";
+import AlertAlarm from "../AlertAlarm";
+import Footer from "../Footer";
+import CardList from "../CardList";
+import SearchArea from "../SearchArea";
 import "../CardList/CardList.styles.css";
+import { MovieGenreContext } from "../MovieGenre/MovieGenreContext.js";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    this.api = new Api();
 
     this.state = {
       hasError: false,
-      moviesList: [],
+      loading: true,
+      tab: "search",
       query: "",
       page: 1,
+      genres: "",
+      moviesList: [],
+      total_pages: "",
       total_results: "",
-      loading: true,
+      items: [
+        {
+          key: "search",
+          label: "Search",
+        },
+        {
+          key: "rated",
+          label: "Rated",
+        },
+      ],
     };
-    this.onPageLoaded = this.onPageLoaded.bind(this);
-    this.updatePage = this.updatePage.bind(this);
+    this.api.createNewGuestSession = this.api.createNewGuestSession.bind(this);
+    this.api.updatePage = this.api.updatePage.bind(this);
+    this.api.onPageLoaded = this.api.onPageLoaded.bind(this);
+    this.api.getRatedMovies = this.api.getRatedMovies.bind(this);
+    this.api.getPopularMovies = this.api.getPopularMovies.bind(this);
+    this.api.getPopularMoviesWithRating = this.api.getPopularMoviesWithRating.bind(this);
+    this.api.getSearchedMoviesWithRating = this.api.getSearchedMoviesWithRating.bind(this);
+    this.api.getGenres = this.api.getGenres.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  handleSearchButtonClick = () => {
+    this.setState(() => {
+      return {
+        tab: "search",
+      };
+    });
+  };
+
+  handleRatedButtonClick = () => {
+    this.setState(() => {
+      return {
+        tab: "rated",
+      };
+    });
+  };
+
+  handleChange(e) {
+    const queryFromKeyBoard = e.target.value.trim();
+    if (!queryFromKeyBoard) {
+      return this.api.getPopularMoviesWithRating();
+    }
+
+    this.setState(() => {
+      return {
+        query: e.target.value.trim(),
+      };
+    });
+
+    this.api.getSearchedMoviesWithRating(1, queryFromKeyBoard);
+  }
+
+  onTabChange = (key) => {
+    this.setState(() => {
+      return {
+        tab: key,
+        page: 1,
+      };
+    });
+  };
+
+  componentDidCatch(error, info) {
+    this.setState({
+      hasError: true,
+      error,
+      errorInfo: info,
+    });
   }
 
   componentDidMount() {
+    this.api.createNewGuestSession();
+    this.api.getGenres();
     this.setState({
       loading: false,
     });
@@ -32,77 +110,25 @@ export default class App extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.page !== this.state.page) {
-      // console.log(this.state.page);
-    }
-    if (prevProps.page !== this.props.page) {
-      // console.log("Пропс page поменялся с прошлого раза");
+      this.api.getSearchedMoviesWithRating(this.state.page, this.state.query);
     }
   }
-
-  onError(err) {
-    this.setState({ hasError: true, errorMessage: err });
-  }
-
-  onPageLoaded() {
-    this.setState({
-      loading: false,
-    });
-  }
-
-  // onNoMoviesFound() {
-
-  // }
-
-  updatePage(query, pageNumber = 1) {
-    let selectFetch;
-    if (query) {
-      selectFetch = `https://api.themoviedb.org/3/search/movie?api_key=dc4df0b8fca07bf8f1f87fb1e7fdd71c&query=${query}&page=${pageNumber}`;
-    } else {
-      selectFetch = `https://api.themoviedb.org/3/movie/popular?api_key=dc4df0b8fca07bf8f1f87fb1e7fdd71c&page=${pageNumber}`;
-    }
-    fetch(selectFetch)
-      .then((data) => data.json())
-      .then((data) => {
-        // console.log(data.results);
-        this.setState(() => {
-          if (data.total_results) {
-            // console.log(data.results);
-            return {
-              moviesList: [...data.results],
-              page: pageNumber,
-              total_results: data.total_results,
-            };
-          } else {
-            // console.log("there's no data.results ", data.results);
-            return {
-              moviesList: [],
-              page: pageNumber,
-              total_results: 0,
-            };
-          }
-        });
-      })
-      .then(this.onPageLoaded())
-      .catch((e) => {
-        throw Error(e);
-      });
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
-  handleChange = (e) => {
-    this.setState(() => {
-      return { query: e.target.value.trim() };
-    });
-    const queryFromKeyBoard = e.target.value.trim();
-    const { page } = this.state;
-    this.updatePage(queryFromKeyBoard, page);
-  };
 
   render() {
-    const { moviesList, query, page, total_results, loading } = this.state;
+    if (this.state.hasError) {
+      const { error, errorInfo } = this.state;
+      return (
+        <AlertAlarm
+          error={error}
+          errorInfo={errorInfo ? errorInfo : null}
+        />
+      );
+    }
+
+    let { genres } = this.state;
+    const rateMovie = this.api.rateMovie;
+    const updatePage = this.api.updatePage;
+    const { moviesList, query, page, total_results, loading, vote_average, tab } = this.state;
     const debounced = debounce(this.handleChange, 500);
 
     const Preloader = (
@@ -127,28 +153,53 @@ export default class App extends React.Component {
       <div className="wrapper">
         <div className="app">
           <div className="header">
+            <Tabs
+              centered
+              defaultActiveKey="1"
+              items={this.state.items}
+              onChange={this.onTabChange}
+            />
+            {total_results >= 20 ? (
+              <div className="wrapperForFooter">
+                <Footer
+                  query={query}
+                  page={page}
+                  total_results={total_results}
+                  updatePage={updatePage}
+                />
+              </div>
+            ) : null}
+            {tab === "search" ? (
+              <SearchArea
+                handleSubmit={this.handleSubmit}
+                handleChange={debounced}
+              />
+            ) : null}
+          </div>
+          <div className="CardList">
+            <MovieGenreContext.Provider value={genres}>
+              <CardList
+                moviesList={moviesList}
+                query={query}
+                page={page}
+                loading={loading}
+                updatePage={updatePage}
+                rateMovie={rateMovie}
+                vote_average={vote_average}
+                tab={tab}
+              />
+            </MovieGenreContext.Provider>
+          </div>
+          {total_results >= 20 ? (
             <div className="wrapperForFooter">
               <Footer
                 query={query}
                 page={page}
                 total_results={total_results}
-                updatePage={this.updatePage}
+                updatePage={updatePage}
               />
             </div>
-            <SearchArea
-              handleSubmit={this.handleSubmit}
-              handleChange={debounced}
-            />
-          </div>
-          <div className="CardList">
-            <CardList
-              moviesList={moviesList}
-              query={query}
-              page={page}
-              loading={loading}
-              updatePage={this.updatePage}
-            />
-          </div>
+          ) : null}
         </div>
       </div>
     );

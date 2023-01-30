@@ -1,6 +1,4 @@
 import React from "react";
-// import PropTypes from "prop-types";
-//import { Test } from "./SearchArea.styles";
 import { Input } from "antd";
 
 class SearchArea extends React.Component {
@@ -11,14 +9,6 @@ class SearchArea extends React.Component {
       hasError: false,
     };
   }
-
-  // componentDidMount() {
-  //   console.log("SearchArea mounted");
-  // }
-
-  // componentUpdate() {
-  //   console.log("SearchArea updated");
-  // }
 
   render() {
     const { handleSubmit, handleChange } = this.props;
@@ -35,16 +25,11 @@ class SearchArea extends React.Component {
         </form>
       </div>
     );
-    // <div className="SearchAreaWrapper">Test content</div>;
   }
 }
 
-SearchArea.propTypes = {
-  // bla: PropTypes.string,
-};
+SearchArea.propTypes = {};
 
-SearchArea.defaultProps = {
-  // bla: 'test',
-};
+SearchArea.defaultProps = {};
 
 export default SearchArea;

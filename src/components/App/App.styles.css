@@ -18,6 +18,10 @@
   row-gap: 30px;
 }
 
+.ant-layout-content {
+  padding: 0px 15px 0 15px;
+}
+
 .wrapperForInput {
   width: 937px;
   padding-bottom: 15px;
@@ -26,22 +30,22 @@
 @media screen and (max-width: 1028px) {
   
   .wrapper {
-    width: 100%;
+    width: 100wh;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .main {
-    width: 451px;
+    width: 388px;
     display: grid;
-    grid-template-columns: 451px;
+    grid-template-columns: 388px;
     column-gap: 30px;
     row-gap: 30px;
   }
 
   .wrapperForInput {
-    width: 453px;
+    width: 388px;
     padding-bottom: 15px;
   }
 
