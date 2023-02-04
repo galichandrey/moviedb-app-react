@@ -3,7 +3,7 @@
 }
 
 .wrapper {
-  width: 100%;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,7 +30,7 @@
 @media screen and (max-width: 1028px) {
   
   .wrapper {
-    width: 100wh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;

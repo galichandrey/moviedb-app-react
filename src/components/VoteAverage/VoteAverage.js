@@ -39,4 +39,8 @@ class VoteAverage extends Component {
   }
 }
 
+VoteAverage.propTypes = {};
+
+VoteAverage.defaultProps = {};
+
 export default VoteAverage;

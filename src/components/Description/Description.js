@@ -6,17 +6,19 @@ import "./Description.styles.css";
 const { Paragraph } = Typography;
 
 export default class Description extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     const { overview } = this.props;
     return (
-      <>
-        <Paragraph
-          className="description"
-          ellipsis={{ ellipsis: false, expandable: false, rows: 6 }}
-        >
-          {overview}
-        </Paragraph>
-      </>
+      <Paragraph
+        className="description"
+        ellipsis={{ ellipsis: false, expandable: false, rows: 6 }}
+      >
+        {overview}
+      </Paragraph>
     );
   }
 }

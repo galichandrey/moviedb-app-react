@@ -1,8 +1,6 @@
 import React from "react";
 import { Rate } from "antd";
 
-// import { RatingContext } from "./RatingContext.js";
-
 class Rating extends React.Component {
   constructor(props) {
     super(props);
@@ -13,8 +11,6 @@ class Rating extends React.Component {
       rating_state: 0,
     };
   }
-
-  // static contextType = RatingContext;
 
   onRatingChange = (e) => {
     const { id, rateMovie } = this.props;

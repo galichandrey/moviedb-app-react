@@ -75,7 +75,6 @@ export default class Card extends React.Component {
 
     if (this.state.hasError) {
       const { error, errorInfo } = this.state;
-      console.log(error, errorInfo);
       return (
         <AlertAlarm
           error={error ? error : "Error!"}
@@ -85,38 +84,36 @@ export default class Card extends React.Component {
     }
 
     return (
-      <>
-        <div className="card">
-          <div className="cardImage">{loading ? posterPreloader : <PosterImage poster_path={poster_path} />}</div>
-          <div className="cardTitleContainer">
-            <Title
-              level={2}
-              className="cardTitle"
-              ellipsis={{ ellipsis: false, expandable: false, rows: 2 }}
-            >
-              {original_title}
-              <VoteAverage vote_average={vote_average.toFixed(1)} />
-            </Title>
-            <Text type="secondary">{release_date ? this.dateConvert(release_date) : null}</Text>
-            <MovieGenre
-              id={id}
-              genre_ids={genre_ids}
-              className="MovieGenre"
-            />
-          </div>
-          <div className="cardDescription">
-            <Description overview={overview} />
-          </div>
-          <div className="cardRating">
-            <Rating
-              id={id}
-              rateMovie={rateMovie}
-              rating={rating}
-              allowClear={false}
-            />
-          </div>
+      <div className="card">
+        <div className="cardImage">{loading ? posterPreloader : <PosterImage poster_path={poster_path} />}</div>
+        <div className="cardTitleContainer">
+          <Title
+            level={2}
+            className="cardTitle"
+            ellipsis={{ ellipsis: false, expandable: false, rows: 2 }}
+          >
+            {original_title}
+            <VoteAverage vote_average={vote_average.toFixed(1)} />
+          </Title>
+          <Text type="secondary">{release_date ? this.dateConvert(release_date) : null}</Text>
+          <MovieGenre
+            id={id}
+            genre_ids={genre_ids}
+            className="MovieGenre"
+          />
         </div>
-      </>
+        <div className="cardDescription">
+          <Description overview={overview} />
+        </div>
+        <div className="cardRating">
+          <Rating
+            id={id}
+            rateMovie={rateMovie}
+            rating={rating}
+            allowClear={false}
+          />
+        </div>
+      </div>
     );
   }
 }

@@ -2,8 +2,8 @@ import React from "react";
 import { Space, Spin } from "antd";
 
 class Spinner extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
       hasError: false,
@@ -26,9 +26,5 @@ class Spinner extends React.Component {
     );
   }
 }
-
-Spinner.propTypes = {};
-
-Spinner.defaultProps = {};
 
 export default Spinner;

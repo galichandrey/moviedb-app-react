@@ -2,6 +2,10 @@ import React from "react";
 import { Alert } from "antd";
 
 export default class AlertAlarm extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     const { error, errorInfo } = this.props;
     return (

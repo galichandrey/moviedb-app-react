@@ -5,11 +5,11 @@ const { Text } = Typography;
 
 import "./MovieGenre.styles.css";
 
-import { MovieGenreContext } from "./MovieGenreContext";
+import { MovieGenreContext } from "../../context/MovieGenreContext";
 
 class MovieGenre extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
 
   static contextType = MovieGenreContext;
@@ -18,10 +18,9 @@ class MovieGenre extends React.Component {
     const { genre_ids } = this.props;
 
     const { genres } = this.context;
-
     const genreNames = genres.map((element) => {
-      for (let i = 0; i < genre_ids.length; i++) {
-        if (element.id === genre_ids[i]) {
+      for (const genreId of genre_ids) {
+        if (element.id === genreId) {
           return (
             <Text
               code

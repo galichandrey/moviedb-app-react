@@ -39,12 +39,22 @@ export default class Main extends React.Component {
       const { query, page, updatePage } = this.props;
       updatePage(query, page);
     }
+
+    if (prevProps.query !== this.props.query) {
+      const { query, page, updatePage } = this.props;
+      updatePage(query, page);
+    }
+
+    if (prevProps.page !== this.props.page) {
+      const { query, page, updatePage } = this.props;
+      updatePage(query, page);
+    }
   }
 
   renderCards = (movieArray) => {
     const { rateMovie } = this.props;
-
-    return movieArray.map(
+    if (!movieArray.results) return;
+    return movieArray.results.map(
       ({ id, original_title, release_date, genre_ids, overview, poster_path, vote_average, rating }) => {
         return (
           <Card
@@ -75,10 +85,11 @@ export default class Main extends React.Component {
       );
     }
 
-    const { loading } = this.state;
+    const { loading } = this.props;
+    // const { query } = this.props;
 
     const cardListPreloader = (
-      <div className="card-preloader">
+      <div className="cardList-preloader">
         <Space direction="vertical">
           <Space direction="horizontal">
             <Spin tip="Loading" />
@@ -87,17 +98,21 @@ export default class Main extends React.Component {
       </div>
     );
 
-    const { query, moviesList } = this.props;
+    const { moviesList } = this.props;
 
     const cards = this.renderCards(moviesList);
-    if ((moviesList.length === 0) & (query.length > 0)) {
-      return <div>No movies found. Please, try another movie</div>;
+    if (!loading & (typeof moviesList.results === "object")) {
+      if (moviesList.results.length === 0) {
+        return <div>No movies found. Please, try another movie</div>;
+      }
     }
 
     return (
-      <div className="main">
+      <div className={loading ? null : "main"}>
         {loading ? cardListPreloader : null}
-        {!loading ? cards : null}
+        {/* {cards} */}
+        {loading ? null : cards}
+        {/* {!loading & !cards ? null : <div>No movies found. Please, try another movie</div>} */}
       </div>
     );
   }

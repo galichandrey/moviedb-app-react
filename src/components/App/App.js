@@ -1,15 +1,15 @@
 import React from "react";
 import { debounce } from "lodash";
-import { Tabs, Space, Spin } from "antd";
+import { Tabs } from "antd";
 
 import "./App.styles.css";
-import Api from "../Api";
+import "../CardList/CardList.styles.css";
+import Api from "../../api/";
 import AlertAlarm from "../AlertAlarm";
 import Footer from "../Footer";
 import CardList from "../CardList";
 import SearchArea from "../SearchArea";
-import "../CardList/CardList.styles.css";
-import { MovieGenreContext } from "../MovieGenre/MovieGenreContext.js";
+import { MovieGenreContext } from "../../context/MovieGenreContext";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -37,51 +37,27 @@ export default class App extends React.Component {
         },
       ],
     };
-    this.api.createNewGuestSession = this.api.createNewGuestSession.bind(this);
-    this.api.updatePage = this.api.updatePage.bind(this);
-    this.api.onPageLoaded = this.api.onPageLoaded.bind(this);
-    this.api.getRatedMovies = this.api.getRatedMovies.bind(this);
-    this.api.getPopularMovies = this.api.getPopularMovies.bind(this);
-    this.api.getPopularMoviesWithRating = this.api.getPopularMoviesWithRating.bind(this);
-    this.api.getSearchedMoviesWithRating = this.api.getSearchedMoviesWithRating.bind(this);
-    this.api.getGenres = this.api.getGenres.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
   };
 
-  handleSearchButtonClick = () => {
-    this.setState(() => {
-      return {
-        tab: "search",
-      };
-    });
-  };
-
-  handleRatedButtonClick = () => {
-    this.setState(() => {
-      return {
-        tab: "rated",
-      };
-    });
-  };
-
-  handleChange(e) {
+  handleChange = (e) => {
     const queryFromKeyBoard = e.target.value.trim();
-    if (!queryFromKeyBoard) {
-      return this.api.getPopularMoviesWithRating();
-    }
-
     this.setState(() => {
       return {
         query: e.target.value.trim(),
+        page: 1,
       };
     });
-
-    this.api.getSearchedMoviesWithRating(1, queryFromKeyBoard);
-  }
+    if (!queryFromKeyBoard) {
+      this.setState({
+        query: "",
+        page: 1,
+      });
+    }
+  };
 
   onTabChange = (key) => {
     this.setState(() => {
@@ -90,6 +66,63 @@ export default class App extends React.Component {
         page: 1,
       };
     });
+  };
+
+  updateGenres = async () => {
+    this.api.getGenres().then(this.onGenresLoaded).catch(this.onError);
+  };
+
+  onGenresLoaded = (genres) => {
+    this.setState(() => {
+      return {
+        genres,
+        loading: false,
+        hasError: false,
+      };
+    });
+  };
+
+  onMoviesLoaded = (moviesData) => {
+    const { page, total_pages, total_results } = moviesData;
+    this.setState(() => {
+      return {
+        page,
+        moviesList: moviesData,
+        total_pages,
+        total_results,
+        loading: false,
+        hasError: false,
+      };
+    });
+  };
+
+  onError = (err) => {
+    this.setState({
+      hasError: true,
+      error: err.name,
+      errorInfo: err.message,
+    });
+  };
+
+  updatePage = (query = "", pageNumber = 1) => {
+    this.setState({
+      loading: true,
+    });
+
+    const { tab = "search" } = this.state;
+
+    if (tab === "rated") {
+      this.setState({
+        query: "",
+      });
+      this.api.getRatedMovies(pageNumber).then(this.onMoviesLoaded).catch(this.onError);
+    } else if (query) {
+      const data = this.api.fetchSearchedMoviesAndRatingArrays(pageNumber, query);
+      this.api.getMoviesWithRating(data).then(this.onMoviesLoaded).catch(this.onError);
+    } else if (!query) {
+      const data = this.api.fetchPopularMoviesAndRatingArrays(pageNumber);
+      this.api.getMoviesWithRating(data).then(this.onMoviesLoaded).catch(this.onError);
+    }
   };
 
   componentDidCatch(error, info) {
@@ -102,15 +135,16 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.api.createNewGuestSession();
-    this.api.getGenres();
+    this.updateGenres();
     this.setState({
       loading: false,
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.page !== this.state.page) {
-      this.api.getSearchedMoviesWithRating(this.state.page, this.state.query);
+    if (this.state.query !== prevState.query) {
+      const { query, page } = this.state;
+      this.updatePage(query, page);
     }
   }
 
@@ -127,27 +161,8 @@ export default class App extends React.Component {
 
     let { genres } = this.state;
     const rateMovie = this.api.rateMovie;
-    const updatePage = this.api.updatePage;
     const { moviesList, query, page, total_results, loading, vote_average, tab } = this.state;
     const debounced = debounce(this.handleChange, 500);
-
-    const Preloader = (
-      <Space
-        direction="vertical"
-        style={{ display: "flex", juctifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
-      >
-        <Space
-          direction="horizontal"
-          style={{ display: "flex", juctifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}
-        >
-          <Spin tip="Loading" />
-        </Space>
-      </Space>
-    );
-
-    if (loading) {
-      return Preloader;
-    }
 
     return (
       <div className="wrapper">
@@ -165,7 +180,7 @@ export default class App extends React.Component {
                   query={query}
                   page={page}
                   total_results={total_results}
-                  updatePage={updatePage}
+                  updatePage={this.updatePage}
                 />
               </div>
             ) : null}
@@ -183,7 +198,7 @@ export default class App extends React.Component {
                 query={query}
                 page={page}
                 loading={loading}
-                updatePage={updatePage}
+                updatePage={this.updatePage}
                 rateMovie={rateMovie}
                 vote_average={vote_average}
                 tab={tab}
@@ -196,7 +211,7 @@ export default class App extends React.Component {
                 query={query}
                 page={page}
                 total_results={total_results}
-                updatePage={updatePage}
+                updatePage={this.updatePage}
               />
             </div>
           ) : null}
