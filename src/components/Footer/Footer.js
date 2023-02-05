@@ -26,9 +26,9 @@ export default class Footer extends React.Component {
       <div className="FooterWrapper">
         <Pagination
           defaultCurrent={1}
-          total={total_results ? total_results : null}
+          total={total_results > 3000 ? 3000 : total_results}
           current={page}
-          pageSize={20}
+          pageSize={6}
           onChange={this.handlePaginationOnChange}
           showSizeChanger={false}
           hideOnSinglePage={true}

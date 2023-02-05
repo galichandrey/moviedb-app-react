@@ -3,6 +3,9 @@
 Watch MovieDB App online
 https://moviedb-app-react.vercel.app/
 
+Improvements (2023.02.06):
+Приложение теперь показывает по 6 фильмов на страницу. Раньше, из-за ограничений в api, на страницу выводилось по 20 фильмов.
+
 Improvements (2023.02.04):
 
 По коду:

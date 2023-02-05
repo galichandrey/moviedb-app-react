@@ -113,7 +113,9 @@ export default class Api {
 
     try {
       // eslint-disable-next-line prettier/prettier
-      const res = await this.getResource(`/guest_session/${sessionId}/rated/movies?api_key=${this._apiKey}&page=${page}`);
+      const res = await this.getResource(
+        `/guest_session/${sessionId}/rated/movies?api_key=${this._apiKey}&page=${page}`
+      );
       return await res.json();
     } catch (err) {
       throw new Error(`Received "${err}"`);
@@ -125,20 +127,35 @@ export default class Api {
   };
 
   fetchPopularMoviesAndRatingArrays = async (page = 1) => {
-    return await Promise.all([this.getPopularMovies(page), this.getRatedMovies()]).catch((err) => {
+    return await Promise.all([
+      this.trimFetch(this.multipleFetch(this.getPopularMovies, page)),
+      this.getRatedMovies(),
+    ]).catch((err) => {
       throw new Error(`Received "${err}"`);
     });
   };
 
-  fetchSearchedMoviesAndRatingArrays = async (page = 1, query) => {
+  fetchSearchedMoviesAndRatingArrays = async (page = "", query) => {
     if (!query) return;
-    return await Promise.all([this.getSearchedMovies(page, query), this.getRatedMovies()]).catch((err) => {
+    return await Promise.all([
+      this.trimFetch(this.multipleFetch(this.getSearchedMovies, page, query)),
+      this.getRatedMovies(),
+    ]).catch((err) => {
       throw new Error(`Received "${err}"`);
     });
+  };
+
+  fetchAllRatedMovies = async (page = 1) => {
+    try {
+      return await this.trimFetch(this.multipleFetch(this.getRatedMovies, page));
+    } catch (err) {
+      throw new Error(`Received "${err}"`);
+    }
   };
 
   _transformMoviesData = async (rawArrays) => {
     if (!rawArrays) return;
+
     const newArrays = await rawArrays.then((data) => {
       return data;
     });
@@ -170,5 +187,54 @@ export default class Api {
       total_pages: `${arr1.total_pages > 500 ? 500 : arr1.total_pages}`,
       total_results: `${arr1.total_results > 10000 ? 10000 : arr1.total_results}`,
     };
+  };
+
+  multipleFetch = (func, page = "", query = "") => {
+    const newPageNumber = Math.ceil(page / 10);
+
+    let pageArray = [];
+    let promiseArray = [];
+    for (let i = 0; i < 3; i++) {
+      const arrayItem = 3 * newPageNumber - i;
+      pageArray.unshift(arrayItem);
+    }
+    pageArray.forEach((page) => {
+      promiseArray.push(func(page, query));
+    });
+    return Promise.all(promiseArray).then((values) => {
+      const [array1, array2, array3] = values;
+      const fullResultsArray = [...array1.results, ...array2.results, ...array3.results];
+
+      const createNewObject = {
+        page,
+        results: fullResultsArray,
+        total_pages: `${array1.total_pages > 500 ? 500 : array1.total_pages}`,
+        total_results: `${array1.total_results > 10000 ? 10000 : array1.total_results}`,
+      };
+
+      return createNewObject;
+    });
+  };
+
+  trimFetch = async (fullArray) => {
+    const trimmedArray = await fullArray.then((fullResultsArray) => {
+      let page = fullResultsArray.page;
+      const newArray = [...fullResultsArray.results];
+      const pageText = page.toString();
+      let pageSliced = 10;
+      if (pageText % 10 !== 0) {
+        pageSliced = pageText % 10;
+      }
+      const newShortArray = newArray.slice(pageSliced * 6 - 6, pageSliced * 6);
+
+      const createNewObject = {
+        page,
+        results: newShortArray,
+        total_pages: `${fullResultsArray.total_pages > 500 ? 500 : fullResultsArray.total_pages}`,
+        total_results: `${fullResultsArray.total_results > 10000 ? 10000 : fullResultsArray.total_results}`,
+      };
+      return createNewObject;
+    });
+    return trimmedArray;
   };
 }

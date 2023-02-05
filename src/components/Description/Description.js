@@ -15,7 +15,7 @@ export default class Description extends React.Component {
     return (
       <Paragraph
         className="description"
-        ellipsis={{ ellipsis: false, expandable: false, rows: 6 }}
+        ellipsis={{ ellipsis: false, expandable: false, rows: 5 }}
       >
         {overview}
       </Paragraph>

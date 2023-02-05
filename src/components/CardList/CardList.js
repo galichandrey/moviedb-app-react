@@ -110,9 +110,7 @@ export default class Main extends React.Component {
     return (
       <div className={loading ? null : "main"}>
         {loading ? cardListPreloader : null}
-        {/* {cards} */}
         {loading ? null : cards}
-        {/* {!loading & !cards ? null : <div>No movies found. Please, try another movie</div>} */}
       </div>
     );
   }

@@ -115,7 +115,7 @@ export default class App extends React.Component {
       this.setState({
         query: "",
       });
-      this.api.getRatedMovies(pageNumber).then(this.onMoviesLoaded).catch(this.onError);
+      this.api.fetchAllRatedMovies(pageNumber).then(this.onMoviesLoaded).catch(this.onError);
     } else if (query) {
       const data = this.api.fetchSearchedMoviesAndRatingArrays(pageNumber, query);
       this.api.getMoviesWithRating(data).then(this.onMoviesLoaded).catch(this.onError);
@@ -174,7 +174,7 @@ export default class App extends React.Component {
               items={this.state.items}
               onChange={this.onTabChange}
             />
-            {total_results >= 20 ? (
+            {total_results >= 6 ? (
               <div className="wrapperForFooter">
                 <Footer
                   query={query}
